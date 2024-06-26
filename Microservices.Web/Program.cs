@@ -1,15 +1,19 @@
 using Microservices.Web.Interfaces;
+using Microservices.Web.Models;
 using Microservices.Web.Services;
+using Microservices.Web.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<IBaseService,BaseService>();
 builder.Services.AddSingleton<ICouponService, CouponService>();
 
 //Add HttpClient for various services.
 
 builder.Services.AddHttpClient("CouponClient", client =>
 {
-    client.BaseAddress =new Uri(builder.Configuration["Services:CouponService"]);
+    
+    Common.RequestUri=builder.Configuration["Services:CouponService"];
 });
 
 // Add services to the container.

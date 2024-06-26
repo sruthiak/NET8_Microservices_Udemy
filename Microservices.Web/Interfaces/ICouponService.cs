@@ -4,11 +4,11 @@ namespace Microservices.Web.Interfaces
 {
     public interface ICouponService
     {
-        Task<ResponseDTO> GetCoupons();
-        Task<ResponseDTO> GetCoupon(int id);
-        Task<ResponseDTO> CreateCoupon(CouponDTO couponDTO);
-        Task<ResponseDTO> UpdateCoupon(CouponDTO couponDTO);
-        Task<ResponseDTO> DeleteCoupon(int id);
+        Task<ResponseDTO> GetCouponsAsync();
+        Task<ResponseDTO> GetCouponAsync(int id);
+        Task<ResponseDTO> CreateCouponAsync(CouponDTO couponDTO);
+        Task<ResponseDTO> UpdateCouponAsync(CouponDTO couponDTO);
+        Task<ResponseDTO> DeleteCouponAsync(int id);
 
     }
 }

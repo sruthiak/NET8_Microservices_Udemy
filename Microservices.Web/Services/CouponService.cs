@@ -1,5 +1,6 @@
 ﻿using Microservices.Web.Interfaces;
 using Microservices.Web.Models;
+using Microservices.Web.Utilities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,35 +10,28 @@ namespace Microservices.Web.Services
 {
     public class CouponService:ICouponService
     {
-        private readonly IHttpClientFactory httpClientFactory;
-        
+        //private readonly IHttpClientFactory httpClientFactory;
+        private readonly IBaseService baseService;
 
-        public CouponService(IHttpClientFactory httpClientFactory)
+
+        public CouponService(IBaseService baseService)
         {
-            this.httpClientFactory = httpClientFactory;
-            
+            this.baseService = baseService;
+
         }
 
-        public async Task<ResponseDTO> CreateCoupon(CouponDTO couponDTO)
+        public async Task<ResponseDTO> CreateCouponAsync(CouponDTO couponDTO)
         {
             ResponseDTO responseDTO = new ResponseDTO();
+            RequestDTO requestDTO = new RequestDTO();
             try
             {
-                var client = httpClientFactory.CreateClient("CouponClient");
-                // [FromBody] attribute in the API Create method will automatically deserialise json string to Coupon object
-                var json = JsonConvert.SerializeObject(couponDTO);
-                var content=new StringContent(json, Encoding.UTF8, "application/json"); 
-                var httpResponseMessage = await client.PostAsync($"{client.BaseAddress}api/CouponAPI/CreateCoupon",content);
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseDTO = JsonConvert.DeserializeObject<ResponseDTO>(result);
-                }
-                else
-                {
-                    responseDTO.IsSuccess = false;
-                    responseDTO.Message = httpResponseMessage.ReasonPhrase;
-                }
+                requestDTO.Data = couponDTO;
+                requestDTO.RequestUri=@"api/CouponAPI/CreateCoupon";
+                requestDTO.APIType = Common.APIType.POST;
+                
+                responseDTO= await baseService.SendAsync(requestDTO);
+                
             }
             catch(Exception ex)
             {
@@ -47,27 +41,22 @@ namespace Microservices.Web.Services
             return responseDTO;
         }
 
-        public async Task<ResponseDTO> DeleteCoupon(int id)
+        public async Task<ResponseDTO> GetCouponAsync(int id)
         {
             ResponseDTO responseDTO = new ResponseDTO();
+            //RequestDTO requestDTO = new RequestDTO();
             try
             {
-                var client=httpClientFactory.CreateClient("CouponClient");
-                var httpResponseMessage =await client.DeleteAsync($"{client.BaseAddress}api/CouponAPI/DeleteCoupon/{id}");
-                if (httpResponseMessage.IsSuccessStatusCode)
+                //requestDTO.Data = null;
+                //requestDTO.RequestUri= $"api/CouponAPI/{id.ToString()}";
+                //requestDTO.APIType = Common.APIType.GET;
+                responseDTO = await baseService.SendAsync(new RequestDTO
                 {
-                    var result =httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    //var json = JsonConvert.SerializeObject(result);
-                    responseDTO = JsonConvert.DeserializeObject<ResponseDTO>(result);
-                   
-                }
-                else
-                {
-                    responseDTO.IsSuccess = false;
-                    responseDTO.Message = httpResponseMessage.ReasonPhrase;
-                }
-
-
+                    Data=null,
+                    RequestUri= $"api/CouponAPI/{id.ToString()}",
+                    APIType=Common.APIType.GET
+                });
+                
             }
             catch(Exception ex)
             {
@@ -77,28 +66,41 @@ namespace Microservices.Web.Services
             return responseDTO;
         }
 
-        public async Task<ResponseDTO> GetCoupon(int id)
+        public async Task<ResponseDTO> DeleteCouponAsync(int id)
         {
             ResponseDTO responseDTO = new ResponseDTO();
+            RequestDTO requestDTO = new RequestDTO();
+            try
+            {
+                requestDTO.RequestUri = $"api/CouponAPI/DeleteCoupon/{id}";
+                requestDTO.APIType = Common.APIType.DELETE;
+                requestDTO.Data = null;
+                responseDTO = await baseService.SendAsync(requestDTO);
+                
+
+            }
+            catch (Exception ex)
+            {
+                responseDTO.IsSuccess = false;
+                responseDTO.Message = ex.Message;
+            }
+            return responseDTO;
+        }
+
+
+
+        public async Task<ResponseDTO> GetCouponsAsync()
+        {
+            ResponseDTO responseDTO = new ResponseDTO();
+            RequestDTO requestDTO = new RequestDTO();
             try
             {
 
-                var client = httpClientFactory.CreateClient("CouponClient"); 
-                HttpResponseMessage httpResponseMessage = await client.GetAsync($"{client.BaseAddress}api/CouponAPI/{id}");
+                requestDTO.APIType = Common.APIType.GET;
+                requestDTO.RequestUri = @"api/CouponAPI11";
 
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseDTO = JsonConvert.DeserializeObject<ResponseDTO>(result);
+                responseDTO = await baseService.SendAsync(requestDTO);
 
-
-                    
-                }
-                else
-                {
-                    responseDTO.IsSuccess = false;
-                    responseDTO.Message = httpResponseMessage.ReasonPhrase;
-                }
 
             }
             catch (Exception ex)
@@ -110,45 +112,16 @@ namespace Microservices.Web.Services
             return responseDTO;
         }
 
-        public async Task<ResponseDTO> GetCoupons()
+
+        public async Task<ResponseDTO> UpdateCouponAsync(CouponDTO couponDTO)
         {
             ResponseDTO responseDTO = new ResponseDTO();
+            RequestDTO requestDTO = new RequestDTO();
             try
             {
-                
-                var client = httpClientFactory.CreateClient("CouponClient");
-                
-                HttpResponseMessage httpResponseMessage =await client.GetAsync(client.BaseAddress+"api/CouponAPI");
-                
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseDTO= JsonConvert.DeserializeObject <ResponseDTO>(result);
-                    
-                    
-;               }
-                else
-                {
-                    responseDTO.IsSuccess = false;
-                    responseDTO.Message = httpResponseMessage.ReasonPhrase;
-                }
-
-            }
-            catch(Exception ex)
-            {
-                responseDTO.IsSuccess = false;
-                responseDTO.Message = ex.Message;
-            }
-
-            return responseDTO;
-        }
-
-        public async Task<ResponseDTO> UpdateCoupon(CouponDTO couponDTO)
-        {
-            ResponseDTO responseDTO = new ResponseDTO();
-            try
-            {
-                var client = httpClientFactory.CreateClient("CouponClient");
+                requestDTO.APIType = Common.APIType.PUT;
+                requestDTO.Data = couponDTO;
+                requestDTO.RequestUri = @"api/CouponAPI/UpdateCoupon";
 
                 /*
                  When calling a HttpPut method, we need to pass the HttpContent.
@@ -157,22 +130,7 @@ namespace Microservices.Web.Services
                 In the API method [FromBody] will deserialize this Json content to the CouponDTO object
                 */
 
-                //serialise to json string
-                var json = JsonConvert.SerializeObject(couponDTO);
-                //convert to HttpContent- pass json string, encoding and mediatype
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var httpResponseMessage = await client.PutAsync($"{client.BaseAddress}api/CouponAPI/UpdateCoupon", content);
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var result= httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseDTO = JsonConvert.DeserializeObject<ResponseDTO>(result);
-                    
-                }
-                else
-                {
-                    responseDTO.IsSuccess = false;
-                    responseDTO.Message = httpResponseMessage.ReasonPhrase;
-                }
+                responseDTO = await baseService.SendAsync(requestDTO);
             }
             catch (Exception ex)
             {

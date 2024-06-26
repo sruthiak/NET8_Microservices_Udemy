@@ -21,19 +21,21 @@ namespace Microservices.Web.Controllers
             ResponseDTO responseDTO = new ResponseDTO();
             try
             {
-                responseDTO=await couponService.GetCoupons();
-                IEnumerable<CouponDTO> couponDTOs;
+                responseDTO=await couponService.GetCouponsAsync();
+                List<CouponDTO> couponDTOs=new();
                 if (responseDTO.IsSuccess)
                 {
                     var json = JsonConvert.SerializeObject(responseDTO.Result);
-                    couponDTOs = JsonConvert.DeserializeObject<IEnumerable<CouponDTO>>(json);
-                    return View(couponDTOs);
+                    couponDTOs = JsonConvert.DeserializeObject<List<CouponDTO>>(json);
+                    
                 }
                 else
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    //return PartialView("_Notification");
                 }
-                
+                return View(couponDTOs);
+
             }
             catch(Exception ex)
             {
@@ -46,24 +48,26 @@ namespace Microservices.Web.Controllers
             ResponseDTO responseDTO = new ResponseDTO();
             try
             {
-                responseDTO = await couponService.GetCoupon(id);
-                CouponDTO couponDTO;
+                responseDTO = await couponService.GetCouponAsync(id);
+                CouponDTO couponDTO=new CouponDTO();
                 if (responseDTO.IsSuccess)
                 {
                     var json = JsonConvert.SerializeObject(responseDTO.Result);
                     couponDTO = JsonConvert.DeserializeObject<CouponDTO>(json);
-                    return PartialView(couponDTO);// View(couponDTO);
+                    return View(couponDTO);
                 }
                 else
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    //return PartialView("_Notification");
                 }
-
+                return NotFound();
             }
             catch (Exception ex)
             {
                 return View("Error");
             }
+            
         }
 
         [HttpGet]
@@ -79,24 +83,28 @@ namespace Microservices.Web.Controllers
                 ResponseDTO responseDTO = new ResponseDTO();
                 try
                 {
-                    responseDTO = await couponService.CreateCoupon(couponDTO);
+                    responseDTO = await couponService.CreateCouponAsync(couponDTO);
                     if (responseDTO.IsSuccess)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction(nameof(Index));
                     }
                     else
-                        return View("Error");
+                    {
+                        TempData["error"] = responseDTO.Message;
+                        return PartialView("_Notification");
+                    }
                 }
 
                 catch (Exception ex)
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    return PartialView("_Notification");
                 }
 
                 
             }
-            return View("Error");
-
+            return View();
+            
         }
 
         [HttpGet]
@@ -105,7 +113,7 @@ namespace Microservices.Web.Controllers
             ResponseDTO responseDTO = new ResponseDTO();
             try
             {
-                responseDTO = await couponService.GetCoupon(id);
+                responseDTO = await couponService.GetCouponAsync(id);
                 if (responseDTO.IsSuccess)
                 {
                     CouponDTO couponDTO = new CouponDTO();
@@ -115,15 +123,17 @@ namespace Microservices.Web.Controllers
                 }
                 else
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    return PartialView("_Notification");
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return View("Error");
+                TempData["error"] = responseDTO.Message;
+                return PartialView("_Notification");
             }
-            
+
         }
 
         [HttpPost]
@@ -134,43 +144,50 @@ namespace Microservices.Web.Controllers
                 ResponseDTO responseDTO = new ResponseDTO();
                 try
                 {
-                    responseDTO = await couponService.UpdateCoupon(couponDTO);
+                    responseDTO = await couponService.UpdateCouponAsync(couponDTO);
                     if (responseDTO.IsSuccess)
                     {
                         return new RedirectToActionResult("Index", "Coupon", null);
                     }
                     else
-                        return View("Error");
+                    {
+                        TempData["error"] = responseDTO.Message;
+                        return PartialView("_Notification");
+                    }
 
                 }
                 catch (Exception ex)
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    return PartialView("_Notification");
                 }
             }
-            return View("Error");
+            return View();
         }
 
-        //[HttpDelete]
+       // [HttpDelete] - This is not HttpDelete.  It wont work if mentioned HttpDelete.
+       // It is in CouponAPIController which actually deletes.
 
         public async Task<IActionResult> DeleteCoupon(int id)
         {
             ResponseDTO responseDTO = new ResponseDTO();
             try
             {
-                responseDTO = await couponService.DeleteCoupon(id);
+                responseDTO = await couponService.DeleteCouponAsync(id);
                 if (responseDTO.IsSuccess)
                 {
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    return View("Error");
+                    TempData["error"] = responseDTO.Message;
+                    return PartialView("_Notification");
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["error"] = responseDTO.Message;
+                return PartialView("_Notification");
             }
         }
     }

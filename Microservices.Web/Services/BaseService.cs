@@ -22,7 +22,7 @@ namespace Microservices.Web.Services
             
             try
             {
-                var client = httpClientFactory.CreateClient("CouponClient");
+                var client = httpClientFactory.CreateClient(requestDTO.HttpClientName);
                 HttpRequestMessage httpRequestMessage = new();
                 httpRequestMessage.RequestUri = new Uri($"{Common.RequestUri}{requestDTO.RequestUri}");                
 

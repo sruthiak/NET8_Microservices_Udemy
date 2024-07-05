@@ -29,8 +29,10 @@ namespace Microservices.Web.Services
                 requestDTO.Data = couponDTO;
                 requestDTO.RequestUri=@"api/CouponAPI/CreateCoupon";
                 requestDTO.APIType = Common.APIType.POST;
-                
-                responseDTO= await baseService.SendAsync(requestDTO);
+                requestDTO.HttpClientName = "CouponClient";
+
+
+                responseDTO = await baseService.SendAsync(requestDTO);
                 
             }
             catch(Exception ex)
@@ -54,8 +56,9 @@ namespace Microservices.Web.Services
                 {
                     Data=null,
                     RequestUri= $"api/CouponAPI/{id.ToString()}",
-                    APIType=Common.APIType.GET
-                });
+                    APIType=Common.APIType.GET,
+                    HttpClientName = "CouponClient"
+            });
                 
             }
             catch(Exception ex)
@@ -75,6 +78,7 @@ namespace Microservices.Web.Services
                 requestDTO.RequestUri = $"api/CouponAPI/DeleteCoupon/{id}";
                 requestDTO.APIType = Common.APIType.DELETE;
                 requestDTO.Data = null;
+                requestDTO.HttpClientName = "CouponClient";
                 responseDTO = await baseService.SendAsync(requestDTO);
                 
 
@@ -98,6 +102,7 @@ namespace Microservices.Web.Services
 
                 requestDTO.APIType = Common.APIType.GET;
                 requestDTO.RequestUri = @"api/CouponAPI11";
+                requestDTO.HttpClientName = "CouponClient";
 
                 responseDTO = await baseService.SendAsync(requestDTO);
 
@@ -122,6 +127,7 @@ namespace Microservices.Web.Services
                 requestDTO.APIType = Common.APIType.PUT;
                 requestDTO.Data = couponDTO;
                 requestDTO.RequestUri = @"api/CouponAPI/UpdateCoupon";
+                requestDTO.HttpClientName = "CouponClient";
 
                 /*
                  When calling a HttpPut method, we need to pass the HttpContent.

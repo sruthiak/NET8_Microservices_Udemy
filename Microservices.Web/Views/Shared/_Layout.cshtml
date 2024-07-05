@@ -25,6 +25,28 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Coupon" asp-action="Index">Coupon</a>
                         </li>
+                        
+                    </ul>
+                    <ul class="navbar-nav">
+                        <!--if user is not authenticated display Register and Login-->
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AuthAPI" asp-action="Register">Register</a>
+
+                            </li>
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AuthAPI" asp-action="Login">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AuthAPI" asp-action="Logout">Logout</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

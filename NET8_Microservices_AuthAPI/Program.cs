@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using NET8_Microservices_AuthAPI.Data;
 using NET8_Microservices_AuthAPI.Models;
+using NET8_Microservices_AuthAPI.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 //Add DbContext
@@ -13,6 +15,17 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 //Add IdentityDbContext
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+//Bind JwtOptions from appsettings
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("APISettings:JwtOptions"));
+
+//Register JwtOption to be available for injection
+builder.Services.AddScoped(resolver => resolver.GetRequiredService<IOptions<JwtOptions>>().Value);
+
+//Register IAuth Service, IJwtTokenGenerator to be available for injection
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 // Add services to the container.
 

@@ -5,8 +5,13 @@ using Microservices.Web.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 builder.Services.AddSingleton<IBaseService,BaseService>();
 builder.Services.AddSingleton<ICouponService, CouponService>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
+
+//add httpcontectaccessor for working with cookies
+builder.Services.AddHttpContextAccessor();
 
 //Add HttpClient for various services.
 
@@ -16,6 +21,10 @@ builder.Services.AddHttpClient("CouponClient", client =>
     Common.RequestUri=builder.Configuration["Services:CouponService"];
 });
 
+builder.Services.AddHttpClient("AuthClient", config => {
+    Common.RequestUri = builder.Configuration["Services:AuthService"];
+
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

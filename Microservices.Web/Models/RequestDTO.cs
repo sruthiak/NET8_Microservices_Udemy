@@ -10,5 +10,7 @@ namespace Microservices.Web.Models
         public string RequestUri { get; set; }
 
         public string AccessToken { get; set; }
+
+        public string HttpClientName { get; set; }
     }
 }

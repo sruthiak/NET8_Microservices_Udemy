@@ -2,16 +2,27 @@ using Microservices.Web.Interfaces;
 using Microservices.Web.Models;
 using Microservices.Web.Services;
 using Microservices.Web.Utilities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//add httpcontectaccessor for working with cookies
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 builder.Services.AddSingleton<IBaseService,BaseService>();
 builder.Services.AddSingleton<ICouponService, CouponService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 
-//add httpcontectaccessor for working with cookies
-builder.Services.AddHttpContextAccessor();
+//Register Cookie Authentication 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";//need to add this action method
+    });
+
 
 //Add HttpClient for various services.
 
@@ -43,6 +54,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -12,9 +12,9 @@ namespace Microservices.Web.Services
         /// of the HTTP request and response, such as headers, cookies, query parameters, and user claims.
         /// https://www.c-sharpcorner.com/article/httpcontextaccessor-in-asp-net-core-web-api/ 
         /// </summary>
-        private readonly HttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TokenProvider(HttpContextAccessor httpContextAccessor)
+        public TokenProvider(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
         }

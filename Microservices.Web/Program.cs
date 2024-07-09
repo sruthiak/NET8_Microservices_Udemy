@@ -14,8 +14,16 @@ builder.Services.AddSingleton<IBaseService,BaseService>();
 builder.Services.AddSingleton<ICouponService, CouponService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 
+/*
+ *****Different method of authentication middleware configuration*****
+AddJwtBearer: For JWT Bearer token authentication, mostly used in API scenarios.
+AddCookie: For cookie-based authentication, mostly used in web applications.
+AddOAuth: For OAuth 2.0 authentication, often used with third-party providers.
+AddBearerToken: Not a standard method, potentially refers to custom bearer token authentication similar to AddJwtBearer
+*/
+
 //Register Cookie Authentication 
-//Here we use cookie-based authentication.
+//In web app we use cookie-based authentication.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

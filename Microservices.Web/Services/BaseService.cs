@@ -11,12 +11,14 @@ namespace Microservices.Web.Services
     public class BaseService : IBaseService
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly ITokenProvider tokenProvider;
 
-        public BaseService(IHttpClientFactory httpClientFactory)
+        public BaseService(IHttpClientFactory httpClientFactory,ITokenProvider tokenProvider)
         {
             this.httpClientFactory = httpClientFactory;
+            this.tokenProvider = tokenProvider;
         }
-        public async Task<ResponseDTO> SendAsync(RequestDTO requestDTO)
+        public async Task<ResponseDTO> SendAsync(RequestDTO requestDTO,bool withBearer)
         {
             ResponseDTO responseDTO = new ResponseDTO();
             
@@ -24,6 +26,17 @@ namespace Microservices.Web.Services
             {
                 var client = httpClientFactory.CreateClient(requestDTO.HttpClientName);
                 HttpRequestMessage httpRequestMessage = new();
+
+                httpRequestMessage.Headers.Add("Accept", "application/json");
+
+                //we need to pass token to CouponAPI and all other APIs because they use [Authorize]
+                //if not passed, then will get UnAuthorized error when clicked the Coupon link in browser
+                if (withBearer)
+                {
+                    var token = tokenProvider.GetToken();// Token is stored in cookie in the Login method
+                    httpRequestMessage.Headers.Add("Authorization", $"Bearer {token}");
+                }
+                
                 httpRequestMessage.RequestUri = new Uri($"{Common.RequestUri}{requestDTO.RequestUri}");                
 
                 switch (requestDTO.APIType)

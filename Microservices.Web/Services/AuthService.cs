@@ -52,7 +52,7 @@ namespace Microservices.Web.Services
                     HttpClientName = "AuthClient",
                 };
 
-                responseDTO = await baseService.SendAsync(requestDTO);
+                responseDTO = await baseService.SendAsync(requestDTO,withBearer:false);
                 
 
             }
@@ -77,7 +77,7 @@ namespace Microservices.Web.Services
                     APIType = Common.APIType.POST,
                     HttpClientName= "AuthClient"
                 };
-                responseDTO =await baseService.SendAsync(requestDTO);
+                responseDTO =await baseService.SendAsync(requestDTO, withBearer: false);
                 
 
             }

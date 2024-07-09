@@ -101,7 +101,7 @@ namespace Microservices.Web.Services
             {
 
                 requestDTO.APIType = Common.APIType.GET;
-                requestDTO.RequestUri = @"api/CouponAPI11";
+                requestDTO.RequestUri = @"api/CouponAPI";
                 requestDTO.HttpClientName = "CouponClient";
 
                 responseDTO = await baseService.SendAsync(requestDTO);

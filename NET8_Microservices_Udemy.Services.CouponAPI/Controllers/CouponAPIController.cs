@@ -12,7 +12,7 @@ namespace NET8_Microservices_Udemy.Services.CouponAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-    //[Authorize]
+    [Authorize]
 	public class CouponAPIController : ControllerBase
 	{
 		private readonly AppDbContext appDbContext;
@@ -80,6 +80,7 @@ namespace NET8_Microservices_Udemy.Services.CouponAPI.Controllers
         }
 
 		[HttpPost("CreateCoupon")]
+        [Authorize(Roles ="ADMIN")]
         public ResponseDTO CreateCoupon([FromBody]CouponDTO couponDTO)
         {
             try
@@ -101,7 +102,7 @@ namespace NET8_Microservices_Udemy.Services.CouponAPI.Controllers
         }
 
         [HttpPut("UpdateCoupon")]
-        
+        [Authorize(Roles = "ADMIN")]
         public ResponseDTO UpdateCoupon([FromBody] CouponDTO couponDTO)
         {
             try
@@ -124,6 +125,7 @@ namespace NET8_Microservices_Udemy.Services.CouponAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteCoupon/{id}")]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDTO DeleteCoupon(int id)
         {
             try

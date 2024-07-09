@@ -91,14 +91,14 @@ namespace Microservices.Web.Controllers
                     else
                     {
                         TempData["error"] = responseDTO.Message;
-                        return PartialView("_Notification");
+                        //return PartialView("_Notification");
                     }
                 }
 
                 catch (Exception ex)
                 {
                     TempData["error"] = responseDTO.Message;
-                    return PartialView("_Notification");
+                    //return PartialView("_Notification");
                 }
 
                 

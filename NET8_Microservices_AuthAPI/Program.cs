@@ -16,7 +16,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-//Bind JwtOptions from appsettings
+//Bind JwtOptions from appsettings. It is used in JwrTokenGenerator.cs for creating token.
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("APISettings:JwtOptions"));
 
 //Register JwtOption to be available for injection

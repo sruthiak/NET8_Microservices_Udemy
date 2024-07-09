@@ -58,7 +58,11 @@ namespace NET8_Microservices_AuthAPI.Services.IServices
                 //generate JWT token
                 //once you get the token, just go to jwt.io and then paste it to decode.
                 //It will give all the claim values. Just for checking
-                var accessToken = jwtTokenGenerator.GenerateToken(user);
+
+                //get all roles for this user.
+
+                var roles = await userManager.GetRolesAsync(user);
+                var accessToken = jwtTokenGenerator.GenerateToken(user,roles);
 
                 UserDTO userDto = new()
                     {

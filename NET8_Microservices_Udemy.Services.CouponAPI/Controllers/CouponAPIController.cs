@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace NET8_Microservices_Udemy.Services.CouponAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+    //[Authorize]
 	public class CouponAPIController : ControllerBase
 	{
 		private readonly AppDbContext appDbContext;

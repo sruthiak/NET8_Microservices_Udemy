@@ -15,6 +15,7 @@ builder.Services.AddSingleton<ICouponService, CouponService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 
 //Register Cookie Authentication 
+//Here we use cookie-based authentication.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

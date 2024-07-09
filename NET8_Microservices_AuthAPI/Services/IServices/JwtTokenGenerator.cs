@@ -1,6 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.IdentityModel.Tokens;
 using NET8_Microservices_AuthAPI.Models;
+using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -15,7 +18,33 @@ namespace NET8_Microservices_AuthAPI.Services.IServices
             //we have already configured JWTOptions in program.cs
             this.jwtOptions = jwtOptions;
         }
-        public string GenerateToken(ApplicationUser applicationUser)
+        /// <summary>
+        /// JWT contains the structure "header.payload.signature"
+        /// check jwt.io website
+        /// ClaimsIdentity is the collection of claims. It is serailized and stored in Jwt token payload.
+        /// This allows the server to authenticate requests without relying on server-side sessions, 
+        /// making it suitable for microservices architectures and APIs.
+        /// 
+        /// How They Work Together
+        ///Authentication Flow: When a user logs in, the server verifies their credentials and 
+        ///creates a ClaimsIdentity representing the authenticated user.Depending on the 
+        ///authentication mechanism:
+        ///Cookie-Based: The server serializes the ClaimsIdentity into a cookie, which is sent to the client's
+        ///browser. The cookie is then included in subsequent requests, allowing the server to identify and
+        ///authenticate the user.
+        ///JWT-Based: The server generates a JWT containing the user's claims and signs it using a 
+        ///secret key. The JWT is sent to the client, who includes it in the Authorization header of 
+        ///subsequent requests. The server verifies the JWT's signature and decodes the claims to 
+        ///authenticate and authorize the user.
+        ///Authorization: Both ClaimsIdentity and JWT carry claims about the user's identity, roles,
+        ///and permissions. This information is used by the server to authorize access to resources or 
+        ///operations based on the user's privileges.
+
+
+        /// </summary>
+        /// <param name="applicationUser"></param>
+        /// <returns></returns>
+        public string GenerateToken(ApplicationUser applicationUser,IEnumerable<string> roles)
         {
             //extract secret key and encode it
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
@@ -26,6 +55,9 @@ namespace NET8_Microservices_AuthAPI.Services.IServices
                 new Claim(JwtRegisteredClaimNames.Name, applicationUser.UserName),
                 new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id)
             };
+
+            //add roles to claimList(ClaimsIdentity)
+            claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             //add tokenDescriptor which contains configuration properties for a token
             var tokenDescriptor = new SecurityTokenDescriptor {

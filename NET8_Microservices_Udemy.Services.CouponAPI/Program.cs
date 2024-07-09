@@ -34,7 +34,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+//app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapControllers();
 //Add to pipeline. when ever the application is restarted, it will check and apply migration

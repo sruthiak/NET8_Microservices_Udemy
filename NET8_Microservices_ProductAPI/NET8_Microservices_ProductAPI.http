@@ -1,0 +1,6 @@
+@NET8_Microservices_ProductAPI_HostAddress = http://localhost:5244
+
+GET {{NET8_Microservices_ProductAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

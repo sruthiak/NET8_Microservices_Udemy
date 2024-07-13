@@ -4,6 +4,27 @@ using System.Text;
 
 namespace NET8_Microservices_Udemy.Services.CouponAPI.Extensions
 {
+    /// <summary>
+    /// This is used to validate the JWT token.
+    /// 1.The client sends an HTTP request to the server 
+    /// with the JWT included in the Authorization header of the request- check BaseService.cs
+    /// 2.The request first passes through the JWT middleware (AddJwtBearer). This middleware validates the token.
+    /// 3.The JWT middleware validates the token by checking its signature, issuer, audience, 
+    /// and expiration date. If the token is valid, the middleware extracts the claims
+    /// and creates a ClaimsPrincipal object, which represents the authenticated user.
+    /// 4.When the request reaches a controller decorated with the [Authorize] attribute,
+    /// the authorization middleware checks the ClaimsPrincipal object to ensure
+    /// the user meets the authorization requirements.
+    /// 5. You can configure additional policies and role-based authorization 
+    /// using the AddAuthorization method. example below
+    /// services.AddAuthorization(options =>
+    ///{
+    /// options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    ///});
+    ///[Authorize(Policy = "AdminOnly")]
+    ///6.If the token is invalid or the user is not authorized, the request 
+    ///will be denied with an appropriate HTTP status code, usually 401 Unauthorized or 403 Forbidden.
+    /// </summary>
     public static class WebApplicationBuilderExtensions
     {
         //static and this keyword is necessary when creating extension methods

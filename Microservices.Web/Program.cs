@@ -13,6 +13,7 @@ builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 builder.Services.AddSingleton<IBaseService,BaseService>();
 builder.Services.AddSingleton<ICouponService, CouponService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IProductService, ProductService>();
 
 /*
  *****Different method of authentication middleware configuration*****
@@ -44,6 +45,10 @@ builder.Services.AddHttpClient("CouponClient", client =>
 builder.Services.AddHttpClient("AuthClient", config => {
     Common.RequestUri = builder.Configuration["Services:AuthService"];
 
+});
+builder.Services.AddHttpClient("ProductClient", config =>
+{
+    Common.RequestUri = builder.Configuration["Services:ProductService"];
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();

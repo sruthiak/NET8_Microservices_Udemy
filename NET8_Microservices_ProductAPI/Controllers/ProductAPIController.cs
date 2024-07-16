@@ -12,7 +12,7 @@ namespace NET8_Microservices_ProductAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize] - commenting bcz Get method is accessed in HomeController
     public class ProductAPIController : ControllerBase
     {
         private readonly AppDbContext appDbContext;

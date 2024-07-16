@@ -15,5 +15,8 @@ namespace Microservices.Web.Models
         public double Price { get; set; }
         public string ImageUrl { get; set; }
         public string CategoryName { get; set; }
+
+        [Range(1,100)]
+        public int Count { get; set; } // this field is in the DTO, not in actual model
     }
 }

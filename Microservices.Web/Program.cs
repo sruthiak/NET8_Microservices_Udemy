@@ -29,8 +29,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromHours(1);
-        options.LoginPath = "/Auth/Login";
-        options.AccessDeniedPath = "/Auth/AccessDenied";//need to add this action method
+        options.LoginPath = "/AuthAPI/Login"; // [Authorize] attribute is used in HomeController/Details method.
+                                              // So if an unauthorized user tries to view detials, it is redirected to Login page
+        options.AccessDeniedPath = "/AuthAPI/AccessDenied";//need to add this action method
     });
 
 

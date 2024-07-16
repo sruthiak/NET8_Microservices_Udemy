@@ -1,28 +1,56 @@
+using Microservices.Web.Interfaces;
 using Microservices.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace Microservices.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IProductService productService;
+        private ResponseDTO responseDTO;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService productService)
         {
-            _logger = logger;
+            this.productService = productService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<ProductDTO> productDTOs = new();
+            responseDTO = await productService.GetProductsAsync();
+            if (responseDTO.IsSuccess)
+            {
+                var json = JsonConvert.SerializeObject(responseDTO.Result);
+                productDTOs = JsonConvert.DeserializeObject<List<ProductDTO>>(json);
+            }
+            else
+            {
+                TempData["error"] = responseDTO.Message;
+            }
+            return View(productDTOs);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int id)
         {
-            return View();
+            ProductDTO productDTO = new();
+            responseDTO = await productService.GetProductByIdAsync(id);
+            if (responseDTO.IsSuccess)
+            {
+                var json = JsonConvert.SerializeObject(responseDTO.Result);
+                productDTO = JsonConvert.DeserializeObject<ProductDTO>(json);
+            }
+            else
+            {
+                TempData["error"] = responseDTO.Message;
+            }
+            return View(productDTO);
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET8_Microservices_AuthAPI"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET8_Microservices_ProductAPI", "NET8_Microservices_ProductAPI\NET8_Microservices_ProductAPI.csproj", "{EB07DE19-064F-48AA-9801-67741DC641AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET8_Microservices_ShoppingCart", "NET8_Microservices_ShoppingCart\NET8_Microservices_ShoppingCart.csproj", "{BC3E600D-8FA7-4F8F-9311-C9A3E490A446}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET8_Microservices_ShoppingCartAPI", "NET8_Microservices_ShoppingCart\NET8_Microservices_ShoppingCartAPI.csproj", "{BC3E600D-8FA7-4F8F-9311-C9A3E490A446}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
